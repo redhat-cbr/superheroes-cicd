@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+namespace: sc-test
+
+images:
+- digest: sha256:b5e20dfec18830d3b31073d08214ff9df2d27a757fd8501c999ff792520f1353
+  name: quay.io/summercamp2023/event-statistics
+- digest: sha256:6e3f559bd7d2c62535f44172fb5f300f909ff32b694db41261eefa95c6ee6581
+  name: quay.io/summercamp2023/rest-fights
+- digest: sha256:2b2af6b7e8d74beb6a216baf9d4a60871deec00f7f8dc75045cbfd4009093d91
+  name: quay.io/summercamp2023/rest-heroes
+- digest: sha256:e2e28746feb834fce8e791b9f3b238a2b7f6c6f331676c4dc8517f21aa7d2dd9
+  name: quay.io/summercamp2023/rest-villains
+- name: quay.io/summercamp2023/ui-super-heroes
+  newTag: "1.2"

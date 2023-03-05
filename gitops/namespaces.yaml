@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sc-build
+  annotations:
+    openshift.io/description: 'Namespace to store tekton pipelines and tasks.'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sc-dev
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (dev).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sc-test
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (test).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sc-unit-test
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (unit test).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sc-integration-test
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (integration test).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: superheroes-pst
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (load test).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: selenium-grid
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (load test).'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: superheroes-prod
+  annotations:
+    openshift.io/description: 'Namespace for production application deployment.'
+

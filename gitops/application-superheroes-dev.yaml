@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: superheroes-dev
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: sc-dev
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    path: quarkus-super-heroes/overlays/sc-dev
+    repoURL: >-
+      https://gitlab.consulting.redhat.com/anz-consulting/openshift/consulting-cop/summer-camp-2023.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}

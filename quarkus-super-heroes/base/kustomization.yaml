@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - apicurio-deployment.yaml
+  - apicurio-route.yaml
+  - apicurio-service.yaml
+  - default_view-rolebinding.yaml
+  - event-statistics-config-configmap.yaml
+  - event-statistics-config-creds-secret.yaml
+  - event-statistics-deployment.yaml
+  - event-statistics-route.yaml
+  - event-statistics-service.yaml
+  - fights-db-config-secret.yaml
+  - fights-db-deployment.yaml
+  - fights-db-service.yaml
+  - fights-kafka-deployment.yaml
+  - fights-kafka-service.yaml
+  - heroes-db-config-secret.yaml
+  - heroes-db-deployment.yaml
+  - heroes-db-init-configmap.yaml
+  - heroes-db-service.yaml
+  - rest-fights-config-configmap.yaml
+  - rest-fights-config-creds-secret.yaml
+  - rest-fights-deployment.yaml
+  - rest-fights-route.yaml
+  - rest-fights-service.yaml
+  - rest-heroes-config-configmap.yaml
+  - rest-heroes-config-creds-secret.yaml
+  - rest-heroes-deployment.yaml
+  - rest-heroes-route.yaml
+  - rest-heroes-service.yaml
+  - rest-villains-config-configmap.yaml
+  - rest-villains-config-creds-secret.yaml
+  - rest-villains-deployment.yaml
+  - rest-villains-route.yaml
+  - rest-villains-service.yaml
+  - villains-db-config-secret.yaml
+  - villains-db-deployment.yaml
+  - villains-db-init-configmap.yaml
+  - villains-db-service.yaml
+  - ui-super-heroes-deployment.yaml
+  - ui-super-heroes-route.yaml
+  - ui-super-heroes-service.yaml

@@ -1,0 +1,23 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/vcs-url: https://github.com/quarkusio/quarkus-super-heroes
+    app.openshift.io/connects-to: "fights-kafka,apicurio,otel-collector"
+    app.openshift.io/vcs-ref: main
+    app.quarkus.io/build-timestamp: 2022-11-10 - 15:15:59 +0000
+  labels:
+    app.kubernetes.io/name: event-statistics
+    app.kubernetes.io/part-of: event-stats
+    app.kubernetes.io/version: java17-latest
+    app: event-statistics
+    application: event-stats
+    system: quarkus-super-heroes
+    app.openshift.io/runtime: quarkus
+  name: event-statistics
+spec:
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: event-statistics

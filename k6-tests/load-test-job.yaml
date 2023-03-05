@@ -1,0 +1,54 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: load-test
+  labels:
+    application: load-test
+    app.openshift.io/runtime: python
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        job-name: load-test
+    spec:
+      containers:
+        - env:
+          - name: MONGODB_USER
+            value: seats
+          image: loadimpact/k6:0.42.0
+          command: [ "/usr/bin/k6", "run", "/tests/load-test.js", "-e", "BASE_URL=rest-fights-sc-test.apps.cluster-42chd.42chd.sandbox171.opentlc.com", "-e", "VUS=2500", "-e", "RAMP_UP=5s", "-e", "STEADY=5s", "-e", "RAMP_DOWN=5s" ]
+          name: load-test
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: config-volume
+            mountPath: /tests
+          - name: results-volume
+            mountPath: /results
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              memory: 2Gi
+      volumes:
+      - name: config-volume
+        configMap:
+          name: load-test
+          items:
+          - key: load-test.js
+            path: load-test.js
+      - name: results-volume
+        persistentVolumeClaim:
+          claimName: "pvc-perftest-results"
+      restartPolicy: OnFailure
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      serviceAccount: default
+      securityContext: {}
+      schedulerName: default-scheduler
+  completionMode: NonIndexed
+  suspend: false
