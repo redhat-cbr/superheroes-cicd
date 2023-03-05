@@ -13,7 +13,7 @@ spec:
       type: string
     - name: config-repo-url
       type: string
-      default: 'ssh://git@gitlab.consulting.redhat.com:2222/anz-consulting/openshift/consulting-cop/summer-camp-2023.git'
+      default: 'https://github.com/redhat-cbr/superheroes-cicd.git'
     - name: source-repo-url
       type: string
       default: 'https://github.com/crscottau/quarkus-super-heroes.git'
