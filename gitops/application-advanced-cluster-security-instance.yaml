@@ -13,7 +13,7 @@ spec:
   source:
     path: gitops/advanced-cluster-security-operator/instance/overlays/default
     repoURL: >-
-      https://gitlab.consulting.redhat.com/anz-consulting/openshift/consulting-cop/summer-camp-2023.git
+      https://github.com/redhat-cbr/superheroes-cicd.git
     targetRevision: HEAD
   syncPolicy:
     automated: {}
