@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1beta1
+7apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   annotations:
@@ -74,6 +74,10 @@ spec:
           $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) \
           --tls-verify=$(params.TLSVERIFY) --no-cache \
           -f $(params.DOCKERFILE) -t "$(params.IMAGE):$(params.IMAGE_TAG)" $(params.CONTEXT)
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
       volumeMounts:
         - mountPath: /var/lib/containers
           name: varlibcontainers
@@ -87,10 +91,17 @@ spec:
           $(params.PUSH_EXTRA_ARGS) --tls-verify=$(params.TLSVERIFY) \
           --digestfile $(workspaces.source.path)/image-digest $(params.IMAGE):$(params.IMAGE_TAG) \
           docker://$(params.IMAGE):$(params.IMAGE_TAG)
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
       volumeMounts:
         - mountPath: /var/lib/containers
           name: varlibcontainers
       workingDir: $(workspaces.source.path)
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
     - image: $(params.BUILDER_IMAGE)
       name: digest-to-results
       resources: {}
