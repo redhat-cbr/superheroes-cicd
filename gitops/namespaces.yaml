@@ -8,20 +8,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sc-dev
-  annotations:
-    openshift.io/description: 'Namespace for application deployment (dev).'
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: sc-test
-  annotations:
-    openshift.io/description: 'Namespace for application deployment (test).'
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: sc-unit-test
   annotations:
     openshift.io/description: 'Namespace for application deployment (unit test).'
