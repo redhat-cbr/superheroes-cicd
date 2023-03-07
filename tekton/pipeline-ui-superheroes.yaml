@@ -42,11 +42,9 @@ spec:
         - generate-tag
       params:
         - name: IMAGE
-          value: 'image-registry.openshift-image-registry.svc.cluster.local:5000/ui-superheroes'
+          value: 'image-registry.openshift-image-registry.svc:5000/ui-superheroes'
         - name: CONTEXT
           value: $(workspaces.source.path)/ui-super-heroes
-#        - name: DOCKERFILE
-#          value: $(workspaces.source.path)/Dockerfile
         - name: IMAGE_TAG
           value: $(tasks.generate-tag.results.tag)
       workspaces:
@@ -61,5 +59,6 @@ spec:
       description: >-
         Common data passed between most tasks. Contains the source code and generated artifacts.
         A VolumeClaimTemplate is recommended.
-#    - name: dockerfile
     - name: dockerconfig
+      description: >-
+        Use the internal-registry secret

@@ -1,0 +1,155 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: event-statistics-java-ci
+spec:
+  params: 
+    - name: git-url
+      type: string
+      description: Repository URL to clone from
+      default: 'https://github.com/joelapatatechaude/quarkus-super-heroes.git'
+    - name: git-revision
+      type: string
+      description: Revision to checkout (branch, tag, sha, ref etc.)
+      default: 'main'
+    - name: cluster-url
+      type: string
+      default: 'cluster-nmpnh.nmpnh.sandbox3031.opentlc.com'
+  tasks:
+    - name: git-clone
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: generate-tag
+      taskRef:
+        name: generate-tag
+        kind: Task
+      runAfter:
+        - git-clone
+      params:
+        - name: COMMIT
+          value: "$(tasks.git-clone.results.commit)"
+    - name: maven-event-statistics
+      taskRef:
+        name: maven2
+        kind: Task
+      runAfter:
+        - git-clone
+      params:
+        - name: CONTEXT_DIR
+          value: event-statistics
+        - name: GOALS
+          value:
+            - -DskipTests
+            - --batch-mode
+            - clean
+            - package
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: maven-settings
+          workspace: maven-settings
+        - name: maven-repo
+          workspace: maven-repo
+    - name: buildah-event-statistics
+      taskRef:
+        name: buildah
+        kind: Task
+      runAfter:
+        - maven-event-statistics
+        - generate-tag
+      params:
+        - name: IMAGE
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
+        - name: CONTEXT
+          value: $(workspaces.source.path)/event-statistics
+        - name: DOCKERFILE
+          value: $(workspaces.dockerfile.path)/Dockerfile
+        - name: IMAGE_TAG
+          value: $(tasks.generate-tag.results.tag)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: dockerfile
+          workspace: dockerfile
+        - name: dockerconfig
+          workspace: dockerconfig
+    - name: acs-scan-event-statistics
+      taskRef:
+        name: acs-image-scan
+        kind: Task
+      runAfter:
+        - buildah-event-statistics
+      params:
+        - name: rox_central_endpoint
+          value: rox-endpoint
+        - name: rox_api_token
+          value: rox-token
+        - name: image
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
+        - name: insecure-skip-tls-verify
+          value: "true"
+    - name: acs-check-event-statistics
+      taskRef:
+        name: acs-image-check
+        kind: Task
+      runAfter:
+        - acs-scan-event-statistics
+      params:
+        - name: rox_central_endpoint
+          value: rox-endpoint
+        - name: rox_api_token
+          value: rox-token
+        - name: image
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
+        - name: insecure-skip-tls-verify
+          value: "true"
+    - name: code-analysis-event-statistics
+      taskRef:
+        name: maven2
+        kind: Task
+      runAfter:
+      - maven-event-statistics
+      params:
+        - name: CONTEXT_DIR
+          value: event-statistics
+        - name: GOALS
+          value:
+          - install
+          - sonar:sonar
+          - -Dsonar.host.url=http://sonarqube-sonarqube.apps.$(params.cluster-url)/
+          - -Dsonar.userHome=/tmp/sonar
+          - -DskipTests=true
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: maven-settings
+          workspace: maven-settings
+        - name: maven-repo
+          workspace: maven-repo
+  workspaces:
+    - name: shared-workspace
+      description: >-
+        Common data passed between most tasks. Contains the source code and generated artifacts.
+        A VolumeClaimTemplate is recommended.
+    - name: maven-settings
+      description: >-
+        Allows the caller to provide a Maven settings.xml file. By default the maven task will
+        create its own using maven central.
+    - name: maven-repo
+      description: >-
+        The workspace storing downloaded maven artifacts
+        persistently between pipeline runs. A PVC is recommended.
+        Use the maven_repo PVC
+    - name: dockerfile
+        Use ConfigMap/dockerfile 
+    - name: dockerconfig
+        Use secret/internal-registry
