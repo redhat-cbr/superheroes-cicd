@@ -42,7 +42,7 @@ spec:
         - generate-tag
       params:
         - name: IMAGE
-          value: 'quay.io/summercamp2023/ui-superheroes'
+          value: 'image-registry.openshift-image-registry.svc.cluster.local:5000/ui-superheroes'
         - name: CONTEXT
           value: $(workspaces.source.path)/ui-super-heroes
 #        - name: DOCKERFILE
@@ -61,5 +61,5 @@ spec:
       description: >-
         Common data passed between most tasks. Contains the source code and generated artifacts.
         A VolumeClaimTemplate is recommended.
-    - name: dockerfile
+#    - name: dockerfile
     - name: dockerconfig
