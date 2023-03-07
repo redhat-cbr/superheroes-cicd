@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sc-build
+  name: superheroes-build
   annotations:
     openshift.io/description: 'Namespace to store tekton pipelines and tasks.'
 ---

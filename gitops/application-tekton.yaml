@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: sc-build
+    namespace: superheroes-build
     server: 'https://kubernetes.default.svc'
   project: default
   source:
