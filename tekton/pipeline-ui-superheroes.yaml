@@ -42,7 +42,7 @@ spec:
         - generate-tag
       params:
         - name: IMAGE
-          value: 'image-registry.openshift-image-registry.svc:5000/ui-superheroes'
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/ui-super-heroes'
         - name: CONTEXT
           value: $(workspaces.source.path)/ui-super-heroes
         - name: IMAGE_TAG
