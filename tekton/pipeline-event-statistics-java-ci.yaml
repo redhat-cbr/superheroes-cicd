@@ -112,29 +112,29 @@ spec:
           value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
         - name: insecure-skip-tls-verify
           value: "true"
-    - name: code-analysis-event-statistics
-      taskRef:
-        name: maven2
-        kind: Task
-      runAfter:
-      - maven-event-statistics
-      params:
-        - name: CONTEXT_DIR
-          value: event-statistics
-        - name: GOALS
-          value:
-          - install
-          - sonar:sonar
-          - -Dsonar.host.url=http://sonarqube.sonarqube.svc:9000/
-          - -Dsonar.userHome=/tmp/sonar
-          - -DskipTests=true
-      workspaces:
-        - name: source
-          workspace: shared-workspace
-        - name: maven-settings
-          workspace: maven-settings
-        - name: maven-repo
-          workspace: maven-repo
+#    - name: code-analysis-event-statistics
+#      taskRef:
+#        name: maven2
+#        kind: Task
+#      runAfter:
+#      - maven-event-statistics
+#      params:
+#        - name: CONTEXT_DIR
+#          value: event-statistics
+#        - name: GOALS
+#          value:
+#          - install
+#          - sonar:sonar
+#          - -Dsonar.host.url=http://sonarqube.sonarqube.svc:9000/
+#          - -Dsonar.userHome=/tmp/sonar
+#          - -DskipTests=true
+#      workspaces:
+#        - name: source
+#          workspace: shared-workspace
+#        - name: maven-settings
+#          workspace: maven-settings
+#        - name: maven-repo
+#          workspace: maven-repo
   workspaces:
     - name: shared-workspace
       description: >-
