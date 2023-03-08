@@ -108,7 +108,7 @@ spec:
           value: rox-endpoint
         - name: rox_api_token
           value: rox-token
-        - name: image
+        - name: image-list
           value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
         - name: insecure-skip-tls-verify
           value: "true"
