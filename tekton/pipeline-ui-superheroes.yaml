@@ -59,6 +59,9 @@ spec:
       description: >-
         Common data passed between most tasks. Contains the source code and generated artifacts.
         A VolumeClaimTemplate is recommended.
+    - name: dockerfile
+      description: >-
+        Not used
     - name: dockerconfig
       description: >-
         Use the internal-registry secret

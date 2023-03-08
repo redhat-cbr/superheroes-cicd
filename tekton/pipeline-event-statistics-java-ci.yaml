@@ -150,6 +150,8 @@ spec:
         persistently between pipeline runs. A PVC is recommended.
         Use the maven_repo PVC
     - name: dockerfile
+      description: >-
         Use ConfigMap/dockerfile 
     - name: dockerconfig
+      description: >-
         Use secret/internal-registry
