@@ -125,7 +125,7 @@ spec:
           value:
           - install
           - sonar:sonar
-          - -Dsonar.host.url=http://sonarqube-sonarqube.apps.$(params.cluster-url)/
+          - -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local/
           - -Dsonar.userHome=/tmp/sonar
           - -DskipTests=true
       workspaces:
