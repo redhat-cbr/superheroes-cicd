@@ -8,6 +8,4 @@ commonAnnotations:
 
 resources:
   - namespace.yaml
-  - create-cluster-init-bundle-sa.yaml
-  - create-cluster-init-bundle-job.yaml
   - secured-cluster.yaml
