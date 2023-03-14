@@ -94,7 +94,7 @@ spec:
         - name: rox_api_token
           value: rox-token
         - name: image-list
-          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics:$(tasks.generate-tag.results.tag)'
         - name: insecure-skip-tls-verify
           value: "true"
     - name: acs-check-event-statistics
@@ -109,7 +109,7 @@ spec:
         - name: rox_api_token
           value: rox-token
         - name: image-list
-          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics'
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/event-statistics:$(tasks.generate-tag.results.tag)'
         - name: insecure-skip-tls-verify
           value: "true"
 #    - name: code-analysis-event-statistics
