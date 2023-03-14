@@ -54,6 +54,36 @@ spec:
           workspace: dockerfile
         - name: dockerconfig
           workspace: dockerconfig
+    - name: acs-scan-ui-superheroes
+      taskRef:
+        name: acs-image-scan
+        kind: Task
+      runAfter:
+        - buildah-ui-superheroes
+      params:
+        - name: rox_central_endpoint
+          value: rox-endpoint
+        - name: rox_api_token
+          value: rox-token
+        - name: image-list
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/ui-super-heroes:$(tasks.generate-tag.results.tag)'
+        - name: insecure-skip-tls-verify
+          value: "true"
+    - name: acs-check-ui-superheroes
+      taskRef:
+        name: acs-image-check 
+        kind: Task
+      runAfter:
+        - acs-scan-ui-superheroes
+      params:
+        - name: rox_central_endpoint
+          value: rox-endpoint
+        - name: rox_api_token
+          value: rox-token
+        - name: image-list
+          value: 'image-registry.openshift-image-registry.svc:5000/superheroes-build/ui-super-heroes:$(tasks.generate-tag.results.tag)'
+        - name: insecure-skip-tls-verify
+          value: "true" 
   workspaces: 
     - name: shared-workspace
       description: >-
