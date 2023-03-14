@@ -7,7 +7,7 @@ spec:
     - name: git-url
       type: string
       description: Repository URL to clone from
-      default: 'https://github.com/joelapatatechaude/quarkus-super-heroes.git'
+      default: 'https://github.com/redhat-cbr/quarkus-super-heroes.git'
     - name: git-revision
       type: string
       description: Revision to checkout (branch, tag, sha, ref etc.)
