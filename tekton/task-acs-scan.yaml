@@ -61,18 +61,13 @@ spec:
         echo $ROX_CENTRAL_ENDPOINT
         echo $ROX_API_TOKEN
         export NO_COLOR="True"
-        echo curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
-          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
-          --output ./roxctl
-        curl -v -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
-          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
-          --output ./roxctl  
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
           "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
           --output ./roxctl  > /dev/null; echo "Getting roxctl"
         chmod +x ./roxctl > /dev/null
         IMAGELIST=` echo "$(params.image-list)" | tr ',' '\n' `
         for NEWIMAGE in $IMAGELIST; do
+            echo $NEWIMAGE
             ./roxctl image scan \
               $( [ "$(params.insecure-skip-tls-verify)" = "true" ] && \
               echo -n "--insecure-skip-tls-verify") \
