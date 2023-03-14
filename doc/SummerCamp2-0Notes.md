@@ -2,6 +2,16 @@
 
 ## Things to sort out
 
+### Internal Registry Credentials
+
+The internal SA named **serviceaccount** has sufficient privileges to push to and pull from the internal registry.  However the 2 secrets that get created automatically are not in the correct format for the buildah PUSH:
+
+* builder-dockercfg-chq6f
+* builder-token-wrc6g
+
+***TODO: Need to work out how to copy or modify the secrets to work with buildah.***
+Essentially, the builder-dockercfg... secret would be ok if we could replace the _Data: .dockerconfig_ with _Data: config.json_
+
 ### Why is SonarQube asking for a username and password?  
 
 Steven mentioned this is because sonarqube needs an initial login to create the admin user password.
@@ -90,10 +100,14 @@ It actually worked!
 
 1. Need to work out how to and what to set the value for the rox endpoint secret in tekton
 1. Need to work out how to generate the API token and set the rox api token secret 
+1. need to work out why the credentials do not work when run in the pipeline
 
 ### Separate namespaces issues
 
 The job that runs in acs-central and generates the init-bundle can not apply it to the acs-instance namesapce.  Maybe the job should actually run in acs-instance?
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
+          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
+          --output ./roxctl  > /dev/null; echo "Getting roxctl"
 
 The SecuredCluster instance does not get created with the Central endpoint name.  Why not?
 
