@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: advanced-cluster-security-instance
+  name: advanced-cluster-security-secured-cluster
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/sync-wave: "10"
 spec:
   destination:
-    namespace: acs-instance
+    namespace: acs-securedcluster
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: gitops/advanced-cluster-security-operator/instance/overlays/default
+    path: gitops/advanced-cluster-security-operator/securedcluster/overlays/default
     repoURL: >-
       https://github.com/redhat-cbr/superheroes-cicd.git
     targetRevision: HEAD
