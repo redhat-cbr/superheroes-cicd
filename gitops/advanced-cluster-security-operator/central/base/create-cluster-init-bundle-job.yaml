@@ -49,9 +49,9 @@ spec:
                 echo "Applying bundle"
                 # No jq in container, python to the rescue
                 cat /tmp/bundle.json
-                cat /tmp/bundle.json | python3 -c "import sys, json; print(json.load(sys.stdin)['kubectlBundle'])" | base64 -d | oc apply -n acs-instance -f -
+                cat /tmp/bundle.json | python3 -c "import sys, json; print(json.load(sys.stdin)['kubectlBundle'])" | base64 -d | oc apply -n acs-securedcluser -f -
                 # Touch SecuredCluster to force operator to reconcile
-                oc label -n acs-instance SecuredCluster local-cluster cluster-init-job-status=created
+                oc label -n acs-securedcluster SecuredCluster local-cluster cluster-init-job-status=created
 
                 echo "ACS Cluster init bundle generated and applied"
               fi
