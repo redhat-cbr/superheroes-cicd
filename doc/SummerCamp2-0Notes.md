@@ -12,6 +12,9 @@ The internal SA named **serviceaccount** has sufficient privileges to push to an
 ***TODO: Need to work out how to copy or modify the secrets to work with buildah.***
 Essentially, the builder-dockercfg... secret would be ok if we could replace the _Data: .dockerconfig_ with _Data: config.json_
 
+***COMPLETED***
+Batch job tekton/job-transform-builder-secret.yaml does the transform
+
 ### Why is SonarQube asking for a username and password?  
 
 Steven mentioned this is because sonarqube needs an initial login to create the admin user password.
@@ -29,6 +32,9 @@ Update rox_token secret with the new token.
 
 ***TODO: This needs to be automated***
 
+***COMPLETED***
+Batch job tekton/job-generate-rox-api-token.yaml creates the ACS API token and creates the secret for the acs-scan tasks
+
 ### Why is the image scan failing:
 
 STEP-ROX-IMAGE-SCAN
@@ -44,6 +50,9 @@ Issue is a stray newline in the secret-acs-endpoint.yaml base64 encoded string.
 **Need to be very careful with newlines on these tokens**
 
 ***TODO: automate the creation of the rox API token secret in the build project***
+
+***COMPLETED***
+Batch job tekton/job-generate-rox-api-token.yaml creates the ACS API token and creates the secret for the acs-scan tasks
 
 ### Why is the image scan failing with a 401
 
@@ -99,8 +108,11 @@ It actually worked!
 ***TODO***
 
 1. Need to work out how to and what to set the value for the rox endpoint secret in tekton
-1. Need to work out how to generate the API token and set the rox api token secret 
-1. need to work out why the credentials do not work when run in the pipeline
+3. Need to work out how to generate the API token and set the rox api token secret 
+4. need to work out why the credentials do not work when run in the pipeline
+
+***COMPLETED***
+See above 2 tasks
 
 ### Separate namespaces issues
 
@@ -111,3 +123,12 @@ The job that runs in acs-central and generates the init-bundle can not apply it 
 
 The SecuredCluster instance does not get created with the Central endpoint name.  Why not?
 
+***TODO: Investigate***
+
+## Tasks not yet started
+
+### Modify CD pipelines to use internal registry
+
+### Bypass Jira integration
+
+### Test CD pipelines
