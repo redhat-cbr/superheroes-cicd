@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rox-api-token-generator
+  namespace: superheroes-build
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: edit-rox-api-token-generator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- kind: ServiceAccount
+  name: rox-api-token-generator
+  namespace: superheroes-build
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: generate-rox-api-token
+spec:
+  template:
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              #!/usr/bin/env bash
+
+              # Get the ACS admin password
+              PASSWORD=$(oc get secret central-htpasswd -n acs-central -o json | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['password'])" | base64 -d)
+
+              # Wait for central to be ready
+              attempt_counter=0
+              max_attempts=20
+              echo "Waiting for central to be available..."
+              until $(curl -k --output /dev/null --silent --head --fail https://central.acs-central.svc); do
+                if [ ${attempt_counter} -eq ${max_attempts} ];then
+                  echo "Max attempts reached"
+                  exit 1
+                fi
+
+                printf '.'
+                attempt_counter=$(($attempt_counter+1))
+                echo "Made attempt $attempt_counter, waiting..."
+                sleep 5
+              done
+
+              echo "Generating the API token"
+              API_TOKEN=$(curl -sk -u "admin:$PASSWORD" "https://central.acs-central.svc/v1/apitokens/generate" -d '{"name":"TEKTON-SCANS", "role": "Continuous Integration"}' | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+              echo $API_TOKEN
+
+              echo "Creating the rox-token secret with the API token"
+              cat > /tmp/secret-rox-token.yaml <<__EOL
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: rox-token
+              stringData:
+              __EOL
+              echo -n "  rox_api_token: $API_TOKEN" >> /tmp/secret-rox-token.yaml
+ 
+              echo "Apply the new secret"
+              cat /tmp/secret-rox-token.yaml
+              oc apply -f  /tmp/secret-rox-token.yaml
+
+          imagePullPolicy: Always
+          name: create-cluster-init-bundle
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      serviceAccount: rox-api-token-generator
+      serviceAccountName: rox-api-token-generator
+      terminationGracePeriodSeconds: 30
