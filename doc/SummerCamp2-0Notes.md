@@ -105,14 +105,15 @@ After:
       
 It actually worked!
 
+Need to work out why the credentials do not work when run in the pipeline. 
+Managed to get it to work by deleting the generated credential integrations in ACS for the local registry and recreated.
+
 ***TODO***
 
-1. Need to work out how to and what to set the value for the rox endpoint secret in tekton
-3. Need to work out how to generate the API token and set the rox api token secret 
-4. need to work out why the credentials do not work when run in the pipeline
+Still not sure what is going on here.  need to retest and probably build a batch python job to either"
+- Delete the generated credential integrations in ACS for the local registry and recreate
+- Update the existing credential integrations in ACS for the local registry
 
-***COMPLETED***
-See above 2 tasks
 
 ### Separate namespaces issues
 
@@ -123,7 +124,10 @@ The job that runs in acs-central and generates the init-bundle can not apply it 
 
 The SecuredCluster instance does not get created with the Central endpoint name.  Why not?
 
-***TODO: Investigate***
+***TODO***
+
+I think this is ok now, I was missing the port on the Central endpoint.
+Need to re-test from a clean build.
 
 ## Tasks not yet started
 
