@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
   name: local-cluster
 spec:
-  centralEndpoint: central.acs-central.svc:443
+#  centralEndpoint: central.acs-central.svc:443
   clusterName: local-cluster
   admissionControl:
     listenOnCreates: false
