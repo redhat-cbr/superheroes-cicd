@@ -30,7 +30,8 @@ spec:
               done
 
               echo "Allowing anonymous access"
-              curl -k -X POST -u "admin:admin" -H "Content-Type: application/json" http://sonarqube.sonarqube.svc.cluster.local:9000/api/settings/set?key=sonar.forceAuthentication&value=false
+              curl -k -X POST -u "admin:admin" -H "Content-Type: application/json" "http://sonarqube.sonarqube.svc.cluster.local:9000/api/settings/set?key=sonar.forceAuthentication&value=false"
+              
           imagePullPolicy: Always
           name: create-cluster-init-bundle
       dnsPolicy: ClusterFirst
