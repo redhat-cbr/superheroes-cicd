@@ -9,3 +9,4 @@ resources:
   - sonarqube-deployment.yaml
   - sonarqube-route.yaml
   - sonarqube-svc.yaml
+  - job-enable-anonymous-access.yaml  
