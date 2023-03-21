@@ -8,16 +8,16 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sc-unit-test
+  name: superheroes-dev
   annotations:
     openshift.io/description: 'Namespace for application deployment (unit test).'
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: sc-integration-test
-  annotations:
-    openshift.io/description: 'Namespace for application deployment (integration test).'
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: sc-integration-test
+#  annotations:
+#    openshift.io/description: 'Namespace for application deployment (integration test).'
 ---
 apiVersion: v1
 kind: Namespace
@@ -29,7 +29,7 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: selenium-grid
+  name: superheroes-test
   annotations:
     openshift.io/description: 'Namespace for application deployment (load test).'
 ---
@@ -39,4 +39,11 @@ metadata:
   name: superheroes-prod
   annotations:
     openshift.io/description: 'Namespace for production application deployment.'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: selenium-grid
+  annotations:
+    openshift.io/description: 'Namespace for application deployment (load test).'
 
