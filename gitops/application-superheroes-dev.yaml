@@ -9,7 +9,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: quarkus-super-heroes/overlays/sc-dev
+    path: quarkus-super-heroes/overlays/superheroes-dev
     repoURL: >-
       https://github.com/redhat-cbr/superheroes-cicd.git
     targetRevision: HEAD

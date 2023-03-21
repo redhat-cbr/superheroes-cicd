@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - ../../base
 
-namespace: sc-dev
+namespace: superheroe-dev
 
 images:
 - digest: sha256:37f4e46239a47228a47cc9b47b0795e3cd54a6d18513e879e7c4306c29b463b6
