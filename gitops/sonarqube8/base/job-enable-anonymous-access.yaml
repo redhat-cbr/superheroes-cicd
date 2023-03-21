@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: enable-anonymous-access
+  namespace: sonarqube
+spec:
+  template:
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              #!/usr/bin/env bash
+              # Wait for Sonarqube API to be ready
+              attempt_counter=0
+              max_attempts=20
+              echo "Waiting for Sonarqube API to be available..."
+              until $(curl -k --output /dev/null --silent --head --fail http://sonarqube.sonarqube.svc.cluster.local:9000); do
+                if [ ${attempt_counter} -eq ${max_attempts} ];then
+                  echo "Max attempts reached"
+                  exit 1
+                fi
+
+                printf '.'
+                attempt_counter=$(($attempt_counter+1))
+                echo "Made attempt $attempt_counter, waiting..."
+                sleep 5
+              done
+
+              echo "Allowing anonymous access"
+              curl -k -X POST -u "admin:admin" -H "Content-Type: application/json" http://sonarqube.sonarqube.svc.cluster.local:9000/api/settings/set?key=sonar.forceAuthentication&value=false
+          imagePullPolicy: Always
+          name: create-cluster-init-bundle
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
