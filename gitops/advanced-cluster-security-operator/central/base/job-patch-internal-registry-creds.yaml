@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-internal-registry-creds
+  namespace: acs-central
+spec:
+  template:
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+          #image: registry.access.redhat.com/ubi8/python-39:1-105
+          env:
+            - name: ACS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: central-htpasswd
+                  key: password
+          command:
+            - /bin/bash
+            - -c
+            - |
+              #!/bin/bash
+              echo "Extracting the builder SA token"
+              SA_TOKEN=$(oc get secret $(oc get secrets|awk '/builder-token/ {print $1}') -ojson | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['token'])"|base64 -d)
+
+              #pip install requests
+
+              cat <<__EOF > /tmp/script.py
+              import os
+              import json
+              import requests
+              from requests.auth import HTTPBasicAuth
+
+              print("Patch ACS internal registry integrations to use SA token rather than password")
+
+              print("Extract list of image integrations")
+              api_url =  'https://central.acs-central.svc/v1/imageintegrations'
+              acs_user = 'admin'
+              response = requests.get(api_url,auth = HTTPBasicAuth(acs_user,os.environ.get("ACS_PASSWORD")), verify=False, headers={"Content-Type":"application/json"})
+              print("Response code: " +  str(response.status_code))
+
+              count = 0
+              for integration in response.json()["integrations"]:
+                if integration["type"] == "docker":
+                  #print(integration["id"] + ' : ' + integration["docker"]["endpoint"])     
+                  if (('image-registry.openshift-image-registry.svc' in integration["docker"]["endpoint"]) or ('172.30' in integration["docker"]["endpoint"])) and (':5000' in integration["docker"]["endpoint"]):
+                    count = count + 1
+                    print("Patching: " + integration["id"] + ' : ' + integration["docker"]["endpoint"])
+                    integration['docker']['password'] = os.environ.get("SA_TOKEN")
+                    integration['name'] = 'Patched: ' + integration['name']
+                    updated = json.loads('{"config": ' + json.dumps(integration) + ', "updatePassword": true}')
+                    patch_url = api_url + "/" + integration['id']
+                    done = requests.patch(patch_url,json = updated,auth = HTTPBasicAuth('admin','xRWA9IyzhzZX7YnmUrE75UPue'), verify=False, headers={"Content-Type":"application/json"})
+                    print("Patch result: " + str(done.status_code) + " - " + done.text)
+              if count == 0:
+                print("Script ran too early, cancel it so it can retry")
+                exit(1)
+              __EOF
+              python3 /tmp/script.py
+          imagePullPolicy: Always
+          name: test
+      dnsPolicy: ClusterFirst
+      serviceAccount: create-cluster-init
+      serviceAccountName: create-cluster-init
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30

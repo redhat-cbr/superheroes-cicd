@@ -52,7 +52,16 @@ spec:
               done
 
               echo "Generating the API token"
-              API_TOKEN=$(curl -sk -u "admin:$PASSWORD" "https://central.acs-central.svc/v1/apitokens/generate" -d '{"name":"TEKTON-SCANS", "role": "Continuous Integration"}' | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+              result=1
+              max_attempts=5
+              until [ $result -eq 0 ]; do
+                API_TOKEN=$(curl -sk --fail -u "admin:$PASSWORD" "https://central.acs-central.svc/v1/apitokens/generate" -d '{"name":"TEKTON-SCANS", "role": "Continuous Integration"}' | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+                result=$?
+                if [ ${attempt_counter} -eq ${max_attempts} ];then
+                  echo "Max attempts reached"
+                  exit 1
+                fi  
+              done
               echo $API_TOKEN
 
               echo "Creating the rox-token secret with the API token"
