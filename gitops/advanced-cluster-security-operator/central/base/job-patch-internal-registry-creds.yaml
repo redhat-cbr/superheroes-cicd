@@ -4,7 +4,7 @@ metadata:
   name: patch-internal-registry-creds
   namespace: acs-central
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   template:
     spec:
@@ -60,7 +60,7 @@ spec:
               __EOF
               python3 /tmp/script.py
           imagePullPolicy: Always
-          name: test
+          name: patch-internalregistry
       dnsPolicy: ClusterFirst
       serviceAccount: create-cluster-init
       serviceAccountName: create-cluster-init

@@ -79,7 +79,7 @@ spec:
               oc apply -f  /tmp/secret-rox-token.yaml
 
           imagePullPolicy: Always
-          name: create-cluster-init-bundle
+          name: generate-rox-api-token
       dnsPolicy: ClusterFirst
       restartPolicy: Never
       serviceAccount: rox-api-token-generator
