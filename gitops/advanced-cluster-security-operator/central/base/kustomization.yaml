@@ -11,4 +11,4 @@ resources:
   - central.yaml
   - sa-create-cluster-init-bundle.yaml
   - job-create-cluster-init-bundle.yaml
-  - job-patch-internal-registry-creds.yaml
+#  - job-patch-internal-registry-creds.yaml
