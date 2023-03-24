@@ -52,7 +52,7 @@ spec:
                     integration['name'] = 'Patched: ' + integration['name']
                     updated = json.loads('{"config": ' + json.dumps(integration) + ', "updatePassword": true}')
                     patch_url = api_url + "/" + integration['id']
-                    done = requests.patch(patch_url,json = updated,auth = HTTPBasicAuth('admin','xRWA9IyzhzZX7YnmUrE75UPue'), verify=False, headers={"Content-Type":"application/json"})
+                    done = requests.patch(patch_url,json = updated,auth = HTTPBasicAuth('admin',os.environ.get("ACS_PASSWORD")), verify=False, headers={"Content-Type":"application/json"})
                     print("Patch result: " + str(done.status_code) + " - " + done.text)
               if count == 0:
                 print("Script ran too early, cancel it so it can retry")
