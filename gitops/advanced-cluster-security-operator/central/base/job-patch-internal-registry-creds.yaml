@@ -23,7 +23,7 @@ spec:
             - |
               #!/bin/bash
               echo "Extracting the builder SA token"
-              SA_TOKEN=$(oc get secret $(oc get secrets|awk '/builder-token/ {print $1}') -ojson | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['token'])"|base64 -d)
+              export SA_TOKEN=$(oc get secret $(oc get secrets|awk '/builder-token/ {print $1}') -ojson | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['token'])"|base64 -d)
 
               #pip install requests
 
